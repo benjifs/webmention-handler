@@ -1,11 +1,10 @@
 import { parse as htmlParser } from 'node-html-parser';
-import { MicroformatRoot } from "microformats-parser/dist/types";
 import { getHEntries } from "./get-h-entries.function";
 import { getHtmlLinks } from "./get-html-links.function";
 import { normalizeEntry } from './normalize-entry.function';
 
 export function parseHtml(html: string, source: string, target: string): any[] {
-  const dom = htmlParser(html);
+  const dom = htmlParser(html, { parseNoneClosedTags: true });
   const urls = getHtmlLinks(dom);
   const items = getHEntries(dom, source, target);
   // If the url is mentioned but for some reason there isn't propper
