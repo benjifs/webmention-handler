@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "cross-fetch": "^3.1.5",
-    "microformats-parser": "^1.4.1",
-    "node-html-parser": "^5.3.3"
+    "microformats-parser": "^2.0.4",
+    "node-html-parser": "^7.0.1"
   }
 }
