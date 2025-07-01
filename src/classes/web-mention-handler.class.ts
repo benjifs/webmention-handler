@@ -18,7 +18,7 @@ export class WebMentionHandler implements IWebMentionHandler{
   whitelist?: string[];
   blacklist?: string[];
   stripQueryParameters: boolean;
-  
+
   constructor(options: WebMentionOptions) {
     if(!options?.storageHandler) options.storageHandler = new LocalWebMentionStorage();
     this.storageHandler = options.storageHandler;
@@ -54,7 +54,7 @@ export class WebMentionHandler implements IWebMentionHandler{
     if(this.requiredProtocol && targetUrl.protocol !== this.requiredProtocol+':'){
       throw new Error(`Given target url was not using "${this.requiredProtocol}"`);
     }
-    
+
     // The spec indicates that we should not allow the source URL to be the same as the target.
     // The following code will only check the host and the pathname as query parameters can change
     // for any number of reasons (cach busting for example) and does indicate a separate url.
@@ -67,7 +67,6 @@ export class WebMentionHandler implements IWebMentionHandler{
     targetUrl.hash = '';
 
     if(this.stripQueryParameters) targetUrl.search = '';
-    
     // TODO: add support for returning a mention status url
     // hence the currently unused queued object
     const queued = await this.storageHandler.addPendingMention({
@@ -83,10 +82,10 @@ export class WebMentionHandler implements IWebMentionHandler{
    * Converts a pending webmention to a set of parsed webmentions by fetching the information from the source
    * server
    */
-  async processMention(mention: SimpleMention): Promise<Mention[] | null> {
+  async processMention(mention: SimpleMention, validateOnly?: boolean): Promise<Mention[] | null> {
     const {html, status, error} = await fetchHtml(mention.source);
     // Delete exisiting webmentions with the current source and target to avoid duplication
-    await this.storageHandler.deleteMention(mention);
+    if (!validateOnly) await this.storageHandler.deleteMention(mention);
     // A status of 410 indicates that the webmention that previously existed was deleted
     // If we got an error or there was no html body, then the source is invalid and
     // we should delete any stored version of the webmention as per the specification without
@@ -110,8 +109,11 @@ export class WebMentionHandler implements IWebMentionHandler{
     // otherwsise, get rid of any basic mentions as we have a better type
     if(mentions.find(m => m.type !== 'mention')) mentions = mentions.filter(m => m.type !== 'mention');
     else mentions = [mentions.find(m => m.type === 'mention')!];
-    const storedMentions = mentions.map(m => this.storageHandler.storeMentionForPage(m.target, m));
-    return Promise.all(storedMentions);
+    if (!validateOnly) {
+      const storedMentions = mentions.map(m => this.storageHandler.storeMentionForPage(m.target, m));
+      return Promise.all(storedMentions);
+    }
+    return Promise.all(mentions);
   }
 
   /**
