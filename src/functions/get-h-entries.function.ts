@@ -1,5 +1,5 @@
 import { mf2 } from "microformats-parser";
-import { MicroformatRoot } from 'microformats-parser/dist/types';
+import { MicroformatRoot } from '../types/microformats-parser';
 import type { HTMLElement } from 'node-html-parser';
 import { getHtmlLinks } from "./get-html-links.function";
 
