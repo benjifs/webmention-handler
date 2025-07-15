@@ -9,7 +9,7 @@ export function getHEntries(dom: HTMLElement, source: string, target: string): M
     if(!getHtmlLinks(entry).includes(target)) return entries;
     return [
       ...entries,
-      ...mf2(entry.toString(), { baseUrl: source}).items
+      ...mf2(entry.toString(), { baseUrl: source }).items
     ]
   }, [] as MicroformatRoot[]);
 }

@@ -106,7 +106,7 @@ export class WebMentionHandler implements IWebMentionHandler{
 
     let mentions = hEntries.map(h => convertHEntryToMention(h, mention.source, mention.target));
     // if there are only basic mentions, use the first (most complete mention)
-    // otherwsise, get rid of any basic mentions as we have a better type
+    // otherwise, get rid of any basic mentions as we have a better type
     if(mentions.find(m => m.type !== 'mention')) mentions = mentions.filter(m => m.type !== 'mention');
     else mentions = [mentions.find(m => m.type === 'mention')!];
     if (!validateOnly) {
