@@ -92,10 +92,7 @@ export class WebMentionHandler implements IWebMentionHandler{
     // adding new ones
     if(error || !html || status === 410) return null;
     const hEntries = parseHtml(html, mention.source, mention.target);
-    let mentionedUrls = hEntries.find(({type}) => type && type.includes("mention-of"));
-    // If the page does not include any mention of the target, then we can return
-    // early as we have already deleted any stored mentions with this target and source
-    if(!mentionedUrls) return null;
+    if (!hEntries || !hEntries.length) return null;
 
     // Not every post has an author, some pages also have authors on a
     // seperate page, as such we should normalize it a local author if possible
