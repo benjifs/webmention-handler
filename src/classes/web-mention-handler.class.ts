@@ -74,7 +74,8 @@ export class WebMentionHandler implements IWebMentionHandler{
       target: targetUrl.toString()
     });
     return {
-      code: 202 // in the event that a status url is returned, we will need to return 201 as per the spec
+      // Return 200 if the mention is already in the queue
+      code: !queued ? 200 : 202 // in the event that a status url is returned, we will need to return 201 as per the spec
     }
   }
 
